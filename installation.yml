@@ -1,0 +1,32 @@
+---
+- hosts: all
+  become: true
+  pre_tasks:
+  - name: Update repo index (CentOS)
+	tags: always
+	dnf:
+  	update_cache: yes
+	changed_when: false
+	when: ansible_distribution == "CentOS"
+
+  - name: Update repo index (Ubuntu)
+	tags: always
+	apt:
+  	update_cache: yes
+	changed_when: false
+	when: ansible_distribution == "Ubuntu"
+
+- hosts: CentOS, Ubuntu
+  become: true
+  roles:
+   - elasticsearch
+
+- hosts: CentOS, Ubuntu
+  become: true
+  roles:
+   - kibana
+
+- hosts: CentOS, Ubuntu
+  become: true
+  roles:
+   - logstash
